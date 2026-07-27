@@ -3,264 +3,347 @@
 <head>
 <meta charset="UTF-8">
 <title>Governed & Auditable AI Content Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1e293b;
-    --paper: #f8fafc;
-    --border: #e2e8f0;
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --success: #10b981;
-    --error: #ef4444;
-    --muted: #64748b;
-    --card: #ffffff;
-    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --bg-dark: #09090b;
+    --glass-bg: rgba(24, 24, 27, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    --accent-hover: linear-gradient(135deg, #60a5fa, #a78bfa);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --success-bg: rgba(16, 185, 129, 0.15);
+    --success-text: #34d399;
+    --error-bg: rgba(239, 68, 68, 0.15);
+    --error-text: #f87171;
+    --card-bg: rgba(255, 255, 255, 0.03);
   }
+  
   * { box-sizing: border-box; }
+  
   body {
     margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    background-color: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
     padding: 40px 20px;
-    line-height: 1.5;
+    line-height: 1.6;
+    perspective: 1000px;
   }
-  .wrap { max-width: 1000px; margin: 0 auto; }
+
+  .wrap { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  
   h1 {
-    font-size: 32px;
-    margin: 0 0 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 42px;
+    margin: 0 0 12px;
     font-weight: 800;
-    color: #0f172a;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     letter-spacing: -0.025em;
+    filter: drop-shadow(0 2px 10px rgba(139, 92, 246, 0.3));
   }
+  
   .sub {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 20px;
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--glass-border);
   }
+  
   .layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 32px;
   }
-  @media (max-width: 768px) {
+  
+  @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
   }
-  .controls, .history-panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: var(--shadow);
+  
+  .glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--glass-shadow);
     margin-bottom: 24px;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
+    transform-style: preserve-3d;
   }
+
+  .glass-panel:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 15px 40px -5px rgba(59, 130, 246, 0.2);
+  }
+  
   .controls-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 24px;
+    transform: translateZ(20px);
   }
+  
   @media (max-width: 600px) {
     .controls-row { grid-template-columns: 1fr; }
   }
+  
   label {
     display: block;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: .05em;
-    color: var(--muted);
-    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-family: 'Outfit', sans-serif;
   }
+  
   input, select {
     width: 100%;
     font-size: 14px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--ink);
-    border-radius: 6px;
+    padding: 12px 16px;
+    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-main);
+    border-radius: 8px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
   }
+  
   input:focus, select:focus {
-    border-color: var(--accent);
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background: rgba(0, 0, 0, 0.5);
   }
+  
+  select option { background: var(--bg-dark); }
+  
   button {
     width: 100%;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 12px 20px;
-    background: var(--accent);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    padding: 14px 24px;
+    background: var(--accent-gradient);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transform: translateZ(30px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
-  button:hover { background: var(--accent-hover); }
-  button:disabled { opacity: .5; cursor: default; }
+  
+  button:hover { 
+    background: var(--accent-hover); 
+    transform: translateZ(35px) translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+  }
+  
+  button:disabled { 
+    opacity: 0.6; 
+    cursor: not-allowed; 
+    transform: translateZ(0); 
+    box-shadow: none; 
+  }
   
   .history-list {
-    max-height: 350px;
+    max-height: 400px;
     overflow-y: auto;
-    margin-top: 12px;
+    margin-top: 16px;
+    padding-right: 8px;
+    transform: translateZ(10px);
   }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
   .history-item {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
+    padding: 16px;
+    border: 1px solid var(--glass-border);
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin-bottom: 12px;
     cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
   }
-  .history-item:hover { background: #f1f5f9; }
-  .history-item:last-child { border-bottom: none; }
-  .history-item-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
-  .history-item-topic { font-weight: 700; color: #0f172a; }
+  
+  .history-item:hover { 
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .history-item-meta { display: flex; justify-content: space-between; margin-bottom: 6px; align-items: center; }
+  .history-item-topic { font-weight: 600; color: #fff; font-size: 14px; }
   
   .badge {
-    font-size: 11px;
-    font-weight: 700;
+    font-size: 10px;
+    font-weight: 800;
     text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 4px;
-    display: inline-block;
-  }
-  .badge.approved { background: #d1fae5; color: #065f46; }
-  .badge.rejected { background: #fee2e2; color: #991b1b; }
-  .badge.pass { background: #d1fae5; color: #065f46; }
-  .badge.fail { background: #fee2e2; color: #991b1b; }
-  
-  .audit-trail {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: var(--shadow);
-  }
-  .audit-section-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 20px;
-    color: #0f172a;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-  }
-  .attempt-card {
-    border: 1px solid var(--border);
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
     border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-    background: #fafaf9;
+    display: inline-block;
+    font-family: 'Outfit', sans-serif;
   }
-  .attempt-title {
-    font-size: 14px;
+  
+  .badge.approved, .badge.pass { background: var(--success-bg); color: var(--success-text); border: 1px solid rgba(16, 185, 129, 0.3); }
+  .badge.rejected, .badge.fail { background: var(--error-bg); color: var(--error-text); border: 1px solid rgba(239, 68, 68, 0.3); }
+  
+  .audit-section-title {
+    font-size: 20px;
     font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    margin: 0 0 24px;
+    color: #fff;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 12px;
+    transform: translateZ(15px);
+  }
+  
+  .attempt-card {
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    background: var(--card-bg);
+    transform: translateZ(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .attempt-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .attempt-title {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
     text-transform: uppercase;
-    letter-spacing: .05em;
-    color: var(--muted);
-    margin-bottom: 16px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 20px;
   }
   
   .score-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 16px;
+    margin-bottom: 24px;
   }
+  
   .score-box {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 16px 12px;
     text-align: center;
-  }
-  .score-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; }
-  .score-val { font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px; }
-  
-  .explanation {
-    background: #fff;
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    margin-bottom: 16px;
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .mcq-list { margin-bottom: 16px; }
-  .mcq-item {
-    background: #fff;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 10px;
-  }
-  .mcq-q { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
-  .mcq-opts { padding-left: 20px; margin: 0; font-size: 13px; }
-  .mcq-opts li { margin-bottom: 4px; }
-  .mcq-opts li.correct { color: var(--success); font-weight: 700; }
-  
-  .notes-box {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 16px;
-    font-size: 13px;
-    margin-bottom: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
   }
   
-  .tag-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .tag-item {
-    background: #e0f2fe;
-    color: #0369a1;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
+  .score-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
   }
 
-  .feedback-list {
-    background: #fff8f6;
-    border: 1px solid #fee2e2;
-    border-radius: 6px;
-    padding: 16px;
-    font-size: 13px;
+  .score-label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Outfit', sans-serif;}
+  .score-val { 
+    font-size: 24px; 
+    font-weight: 800; 
+    font-family: 'Outfit', sans-serif;
+    color: #fff; 
+    margin-top: 8px; 
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
   }
-  .feedback-item { color: #991b1b; margin-bottom: 6px; }
+  
+  .explanation, .notes-box, .mcq-item, .feedback-list {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #e2e8f0;
+  }
+  
+  .mcq-item { margin-bottom: 12px; }
+  .mcq-q { font-weight: 600; margin-bottom: 12px; font-size: 15px; color: #fff; }
+  .mcq-opts { padding-left: 24px; margin: 0; }
+  .mcq-opts li { margin-bottom: 8px; }
+  .mcq-opts li.correct { color: var(--success-text); font-weight: 600; text-shadow: 0 0 10px rgba(52, 211, 153, 0.2); }
+  
+  .tag-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .tag-item {
+    background: rgba(59, 130, 246, 0.15);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .feedback-list { background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.2); }
+  .feedback-item { color: #fca5a5; margin-bottom: 8px; }
   .feedback-item:last-child { margin-bottom: 0; }
   
-  .empty { color: var(--muted); font-style: italic; text-align: center; padding: 40px; }
+  .empty { color: var(--text-muted); font-style: italic; text-align: center; padding: 40px; }
+  
   .spin {
-    display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border);
-    border-top-color: var(--accent); border-radius: 50%;
-    animation: spin .7s linear infinite; margin-right: 8px; vertical-align: -2px;
+    display: inline-block; width: 16px; height: 16px; border: 2px solid var(--glass-border);
+    border-top-color: #60a5fa; border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin-right: 12px; vertical-align: -3px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+  
   .errbox {
-    background: #fef2f2; color: var(--error); border: 1px solid #fee2e2;
-    padding: 16px; border-radius: 6px; font-size: 14px; margin-bottom: 24px;
+    background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 16px 20px; border-radius: 10px; font-size: 14px; margin-bottom: 24px;
+    backdrop-filter: blur(8px);
   }
 </style>
+<!-- Include Vanilla Tilt for 3D effect -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js" integrity="sha512-wC/cunGGDjXSl9OHsu09RuWd/Ea/bE/Hj3A+Uq87+8/U7j0K3BwN0UaX4lqWp/F/eC1+vXb6Z56f4dY1xL1i3Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
 <div class="wrap">
-  <h1>Governed & Auditable AI Content Pipeline</h1>
-  <div class="sub">Part 2: Schema validation, quantitative quality scores, SQLite persistence, and bounded refinement attempts.</div>
+  <h1>Governed & Auditable AI Content</h1>
+  <div class="sub">Pipeline V2: Schema validation, 3D scoring, and bounded refinement.</div>
 
   <div class="layout">
     <div>
-      <div class="controls">
+      <div class="glass-panel" data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
         <div class="controls-row">
           <div>
             <label>User ID</label>
-            <input id="userId" type="text" value="default_user">
+            <input id="userId" type="text" value="admin_user">
           </div>
           <div>
             <label>Grade</label>
@@ -272,7 +355,7 @@
           </div>
           <div>
             <label>Topic</label>
-            <input id="topic" type="text" value="Fractions as parts of a whole">
+            <input id="topic" type="text" value="Fractions">
           </div>
         </div>
         <button id="run">Run Governed Pipeline</button>
@@ -280,18 +363,18 @@
 
       <div id="error"></div>
 
-      <div class="audit-trail">
+      <div class="glass-panel">
         <div class="audit-section-title">Audit Trail & Output Lifecycle</div>
-        <div id="audit-body"><div class="empty">No pipeline runs loaded. Enter parameters and click "Run Governed Pipeline".</div></div>
+        <div id="audit-body"><div class="empty">System initialized. Awaiting parameters.</div></div>
       </div>
     </div>
 
     <div>
-      <div class="history-panel">
-        <label>Runs History</label>
-        <button id="loadHistory" style="margin-top: 8px; padding: 8px 12px; font-size: 12px;">Load History</button>
+      <div class="glass-panel" data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
+        <label style="color: #fff; font-size: 16px;">Runs History</label>
+        <button id="loadHistory" style="margin-top: 12px; padding: 10px 16px; font-size: 12px; background: rgba(255,255,255,0.1); box-shadow: none; border: 1px solid rgba(255,255,255,0.1);">Load History</button>
         <div class="history-list" id="history-list">
-          <div style="font-size: 13px; color: var(--muted); text-align: center; padding: 20px 0;">No history loaded.</div>
+          <div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 30px 0;">No history loaded.</div>
         </div>
       </div>
     </div>
@@ -305,13 +388,13 @@ const historyBtn = document.getElementById('loadHistory');
 async function loadHistory() {
   const userId = document.getElementById('userId').value.trim();
   const listEl = document.getElementById('history-list');
-  listEl.innerHTML = '<div class="empty"><span class="spin"></span>Loading history...</div>';
+  listEl.innerHTML = '<div class="empty"><span class="spin"></span>Syncing core databanks...</div>';
   try {
     const res = await fetch(`/history?user_id=${encodeURIComponent(userId)}`);
     const history = await res.json();
     if (!res.ok) throw new Error(history.detail || 'Failed to load history');
     if (!history.length) {
-      listEl.innerHTML = '<div style="font-size: 13px; color: var(--muted); text-align: center; padding: 20px 0;">No runs found for this user.</div>';
+      listEl.innerHTML = '<div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 30px 0;">No runs found for this user.</div>';
       return;
     }
     listEl.innerHTML = '';
@@ -323,43 +406,42 @@ async function loadHistory() {
       item.innerHTML = `
         <div class="history-item-meta">
           <span class="badge ${statusClass}">${run.final.status}</span>
-          <span style="color: var(--muted); font-size: 11px;">G${run.input.grade}</span>
+          <span style="color: var(--text-muted); font-size: 11px; font-weight: 600;">G${run.input.grade}</span>
         </div>
         <div class="history-item-topic">${escapeHtml(run.input.topic)}</div>
-        <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">${formattedTime}</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">${formattedTime}</div>
       `;
       item.addEventListener('click', () => renderRunArtifact(run));
       listEl.appendChild(item);
     });
   } catch (err) {
-    listEl.innerHTML = `<div style="font-size: 13px; color: var(--error); text-align: center; padding: 20px 0;">${escapeHtml(err.message)}</div>`;
+    listEl.innerHTML = `<div style="font-size: 13px; color: var(--error-text); text-align: center; padding: 30px 0;">${escapeHtml(err.message)}</div>`;
   }
 }
 
 function renderRunArtifact(run) {
   const body = document.getElementById('audit-body');
   let html = `
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+    <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 20px;">
       <div>
-        <div style="font-size: 13px; color: var(--muted);">Run ID: <strong>${run.run_id}</strong></div>
-        <div style="font-size: 15px; font-weight: 700; margin-top: 4px;">Topic: ${escapeHtml(run.input.topic)} (Grade ${run.input.grade})</div>
+        <div style="font-size: 12px; color: var(--text-muted); font-family: 'Outfit', sans-serif; letter-spacing: 0.05em;">RUN IDENTIFIER <br> <span style="color: #fff; font-size: 14px;">${run.run_id}</span></div>
+        <div style="font-size: 18px; font-weight: 600; margin-top: 10px; color: #fff;">${escapeHtml(run.input.topic)} <span style="color: var(--text-muted); font-size: 14px;">(Grade ${run.input.grade})</span></div>
       </div>
       <div>
-        <span class="badge ${run.final.status === 'approved' ? 'approved' : 'rejected'}" style="font-size: 14px; padding: 6px 12px;">
+        <span class="badge ${run.final.status === 'approved' ? 'approved' : 'rejected'}" style="font-size: 14px; padding: 8px 16px; border-radius: 8px;">
           ${run.final.status.toUpperCase()}
         </span>
       </div>
     </div>
   `;
 
-  // Display attempts
-  html += `<div class="audit-section-title" style="font-size: 16px; margin-top: 24px;">Generation & Refinement Log</div>`;
+  html += `<div class="audit-section-title" style="font-size: 16px; margin-top: 32px;">Generation & Refinement Log</div>`;
   run.attempts.forEach(att => {
     const isPass = att.review.pass;
     html += `
       <div class="attempt-card">
-        <div class="attempt-title" style="display: flex; justify-content: space-between;">
-          <span>Attempt ${att.attempt}</span>
+        <div class="attempt-title" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Attempt 0${att.attempt}</span>
           <span class="badge ${isPass ? 'pass' : 'fail'}">${isPass ? 'PASS' : 'FAIL'}</span>
         </div>
         
@@ -382,9 +464,9 @@ function renderRunArtifact(run) {
           </div>
         </div>
 
-        <div style="font-weight: 600; font-size: 13px; color: var(--muted); margin-bottom: 8px;">Generated Draft Content:</div>
+        <div style="font-weight: 600; font-size: 12px; color: var(--text-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;">Generated Draft Content</div>
         <div class="explanation">
-          <strong>Explanation (Grade ${att.draft.explanation.grade}):</strong><br>
+          <strong style="color: #fff;">Explanation (Grade ${att.draft.explanation.grade}):</strong><br><br>
           ${escapeHtml(att.draft.explanation.text)}
         </div>
 
@@ -404,9 +486,9 @@ function renderRunArtifact(run) {
         </div>
 
         <div class="notes-box">
-          <strong>Learning Objective:</strong> ${escapeHtml(att.draft.teacher_notes.learning_objective)}<br><br>
-          <strong>Common Misconceptions:</strong>
-          <ul style="margin: 4px 0 0; padding-left: 20px;">
+          <strong style="color: #fff;">Learning Objective:</strong> ${escapeHtml(att.draft.teacher_notes.learning_objective)}<br><br>
+          <strong style="color: #fff;">Common Misconceptions:</strong>
+          <ul style="margin: 8px 0 0; padding-left: 20px;">
             ${att.draft.teacher_notes.common_misconceptions.map(m => `<li>${escapeHtml(m)}</li>`).join('')}
           </ul>
         </div>
@@ -415,10 +497,10 @@ function renderRunArtifact(run) {
     if (!isPass && att.review.feedback && att.review.feedback.length) {
       html += `
         <div class="feedback-list">
-          <strong style="color: #991b1b; display: block; margin-bottom: 8px;">Reviewer Critique & Feedback:</strong>
+          <strong style="color: #fca5a5; display: block; margin-bottom: 12px; font-family: 'Outfit', sans-serif;">REVIEWER CRITIQUE & FEEDBACK:</strong>
           ${att.review.feedback.map(fb => `
             <div class="feedback-item">
-              <strong>Field [${escapeHtml(fb.field)}]:</strong> ${escapeHtml(fb.issue)}
+              <strong style="color: #fff;">[${escapeHtml(fb.field)}]</strong> - ${escapeHtml(fb.issue)}
             </div>
           `).join('')}
         </div>
@@ -427,8 +509,8 @@ function renderRunArtifact(run) {
 
     if (att.refined) {
       html += `
-        <div style="margin-top: 16px; padding: 12px; background: #e0f2fe; border-left: 4px solid var(--accent); border-radius: 4px; font-size: 13px;">
-          <strong>Refiner Agent:</strong> Generated refined draft addressing feedback items.
+        <div style="margin-top: 20px; padding: 16px; background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; border-radius: 0 8px 8px 0; font-size: 13px; color: #93c5fd;">
+          <strong style="color: #fff;">Refiner Agent Triggered:</strong> Generated refined draft addressing feedback items dynamically.
         </div>
       `;
     }
@@ -436,34 +518,32 @@ function renderRunArtifact(run) {
     html += `</div>`;
   });
 
-  // Display Final tags if approved
   if (run.final.status === 'approved' && run.final.tags) {
     const t = run.final.tags;
     html += `
-      <div class="attempt-card" style="background: #f0fdf4; border-color: #bbf7d0;">
-        <div class="attempt-title" style="color: #166534;">Final Classification Tags</div>
+      <div class="attempt-card" style="background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);">
+        <div class="attempt-title" style="color: #34d399;">Final Classification Tags</div>
         <div class="tag-container">
-          <div class="tag-item" style="background: #dcfce7; color: #166534;">Subject: ${escapeHtml(t.subject)}</div>
-          <div class="tag-item" style="background: #dcfce7; color: #166534;">Topic: ${escapeHtml(t.topic)}</div>
-          <div class="tag-item" style="background: #dcfce7; color: #166534;">Grade: ${escapeHtml(String(t.grade))}</div>
-          <div class="tag-item" style="background: #dcfce7; color: #166534;">Difficulty: ${escapeHtml(t.difficulty)}</div>
-          <div class="tag-item" style="background: #dcfce7; color: #166534;">Bloom's Level: ${escapeHtml(t.blooms_level)}</div>
+          <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Subject: ${escapeHtml(t.subject)}</div>
+          <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Topic: ${escapeHtml(t.topic)}</div>
+          <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Grade: ${escapeHtml(String(t.grade))}</div>
+          <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Difficulty: ${escapeHtml(t.difficulty)}</div>
+          <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Bloom's Level: ${escapeHtml(t.blooms_level)}</div>
           ${t.content_type.map(ct => `
-            <div class="tag-item" style="background: #dcfce7; color: #166534;">Type: ${escapeHtml(ct)}</div>
+            <div class="tag-item" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">Type: ${escapeHtml(ct)}</div>
           `).join('')}
         </div>
       </div>
     `;
   }
 
-  // Display timestamps
   const start = new Date(run.timestamps.started_at);
   const end = new Date(run.timestamps.finished_at);
   const duration = ((end - start) / 1000).toFixed(1);
   html += `
-    <div style="font-size: 12px; color: var(--muted); margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px; display: flex; justify-content: space-between;">
+    <div style="font-size: 12px; color: var(--text-muted); margin-top: 24px; border-top: 1px solid var(--glass-border); padding-top: 16px; display: flex; justify-content: space-between;">
       <span>Started: ${start.toLocaleString()}</span>
-      <span>Finished: ${end.toLocaleString()} (${duration}s duration)</span>
+      <span>Execution Time: <strong style="color: #fff;">${duration}s</strong></span>
     </div>
   `;
 
@@ -485,12 +565,19 @@ runBtn.addEventListener('click', async () => {
 
   errorEl.innerHTML = '';
   if (!topic) {
-    errorEl.innerHTML = `<div class="errbox">Please enter a topic.</div>`;
+    errorEl.innerHTML = `<div class="errbox">Please enter a valid topic.</div>`;
     return;
   }
 
   runBtn.disabled = true;
-  auditEl.innerHTML = `<div class="empty"><span class="spin"></span>Executing governed agent pipeline... This will run generation, quality score evaluation, and up to 2 rounds of refinement if necessary.</div>`;
+  runBtn.innerHTML = `<span class="spin"></span> Processing Matrix...`;
+  auditEl.innerHTML = `
+    <div class="empty" style="padding: 60px 20px;">
+      <span class="spin" style="width: 24px; height: 24px; border-width: 3px;"></span>
+      <div style="margin-top: 16px; font-size: 15px; color: #fff;">Executing Neural Pipeline</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">Generating content, running quality evaluations, and iterating refinements...</div>
+    </div>
+  `;
 
   try {
     const res = await fetch('/api/run-pipeline', {
@@ -501,18 +588,18 @@ runBtn.addEventListener('click', async () => {
     const result = await res.json();
     if (!res.ok) throw new Error(result.detail || 'Pipeline request failed');
     renderRunArtifact(result);
-    loadHistory(); // Reload history pane
+    loadHistory(); 
   } catch (err) {
-    errorEl.innerHTML = `<div class="errbox">Pipeline execution error: ${escapeHtml(err.message)}</div>`;
-    auditEl.innerHTML = `<div class="empty">Execution failed. Check the error message above.</div>`;
+    errorEl.innerHTML = `<div class="errbox"><strong>CRITICAL ERROR:</strong> ${escapeHtml(err.message)}</div>`;
+    auditEl.innerHTML = `<div class="empty" style="color: var(--error-text);">Execution halted due to anomalies.</div>`;
   } finally {
     runBtn.disabled = false;
+    runBtn.innerHTML = `Run Governed Pipeline`;
   }
 });
 
 historyBtn.addEventListener('click', loadHistory);
 
-// Initial load
 loadHistory();
 </script>
 </body>
