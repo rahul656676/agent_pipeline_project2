@@ -17,7 +17,7 @@ class GenerateRequest(BaseModel):
     topic: str
     user_id: str
 
-@app.post("/generate")
+@app.post("/api/run-pipeline")
 async def generate_content(req: GenerateRequest):
     try:
         run_artifact = pipeline.run(grade=req.grade, topic=req.topic)

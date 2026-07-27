@@ -493,7 +493,7 @@ runBtn.addEventListener('click', async () => {
   auditEl.innerHTML = `<div class="empty"><span class="spin"></span>Executing governed agent pipeline... This will run generation, quality score evaluation, and up to 2 rounds of refinement if necessary.</div>`;
 
   try {
-    const res = await fetch('/generate', {
+    const res = await fetch('/api/run-pipeline', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ grade: Number(grade), topic, user_id: userId })
